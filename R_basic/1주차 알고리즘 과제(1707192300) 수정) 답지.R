@@ -1,0 +1,65 @@
+# 1번 문제 : 반복문(for, while)을 사용하지 않고 i 번째 피보나치 수를 출력하는 함수를 구현하세요.
+fibonacci_number <- function(i)
+{
+  if(i <= 2){
+    return(1)
+  }else{
+    return(fibonacci_number(i-1) + fibonacci_number(i-2))
+  }
+}
+
+# 2번 문제 : 첫번째 피보나치 수부터 n번째 피보나치 수까지의 합을 result 변수에 담아주세요! 
+#           단, 0 < n <= 10000, 제한 시간 1초
+system.time({
+  rm(list = ls())
+  fibonacci_number <- function(i)
+  {
+    if(i <= 2){
+      return(1)
+    }else{
+      return(fibonacci_number(i-1) + fibonacci_number(i-2))
+    }
+  }
+  sum_of_fibonacci <- function(n)
+  {
+    cache <- rep(1, n)
+    for(i in 3:n){
+      cache[i] <- (cache[i-1] + cache[i-2]) %% 1000000009
+    }
+    return(sum(cache) %% 1000000009)
+  }
+  sum_of_fibonacci(sample(1000:10000, 1))
+})
+
+# 3번 문제 : my_function은 정수 n(1<=n<=100000)을 입력받아 세 가지 변환 여러번을 통해 최종적으로 1을 만드는데, 그때 변환의 최소 수를 출력하는 함수다.
+#            변환의 방법은 다음과 같다.
+#               1. n이 3의 배수 인 경우 -> n / 3으로 변환
+#               2. n이 2의 배수 인 경우 -> n / 2으로 변환
+#               3. n - 1로 변환
+#            만약 n이 6이라면, 3의 배수이기 때문에, 1번 변환에 의해 2가 될 수도 있고, 2번 변환에 의해 3이 될 수도 있고, 3번 변환에 의해 5가 될 수도 있다.
+#            그리고 6을 1번 변환을 통해 2가되면 2, 3번 변환 중 둘 중 하나를 거치면 1이 된다.
+#            즉, my_function(6) = 2가 된다.
+#            my_function을 구현하세요. 제한 시간 1초
+system.time({
+  rm(list = ls())
+  my_function <- function(n)
+  {
+    result <- 0
+    cache <- rep(100000, 100000)
+    cache[1] <- 0
+    for(i in 2:n){
+      if(i %% 3 == 0){
+        cache[i] <- min(cache[i / 3] + 1, cache[i])
+      }
+      if(i %% 2 == 0){
+        cache[i] <- min(cache[i / 2] + 1, cache[i])
+      }
+      cache[i] <- min(cache[i - 1] + 1, cache[i])
+    }
+    return(cache[n])
+  }
+  input <- sample(10000:100000, 1)
+  output <- my_function(input)
+  cat(paste("input :", input,  "\\ output :", output, "\n"))
+})
+
